@@ -1,0 +1,33 @@
+---
+title: "Penguins Report"
+format: html
+params:
+  island: "Dream"
+execute: 
+  echo: false
+  warning: false
+  message: false
+editor_options: 
+  chunk_output_type: console
+---
+
+```{r}
+library(tidyverse)
+library(palmerpenguins)
+```
+
+The island we have as our parameter is `r params$island`.
+
+```{r}
+penguins |> 
+  filter(island == params$island) |> 
+  group_by(sex) |> 
+  summarize(avg_bill_length = mean(bill_length_mm, na.rm = TRUE)) |> 
+  ungroup() |> 
+  drop_na(sex) |> 
+  ggplot(aes(x = sex, y = avg_bill_length)) +
+  geom_col() +
+  labs(title = str_glue("Average bill length by sex on {params$island} island"))
+```
+
+
